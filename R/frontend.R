@@ -952,7 +952,11 @@ collectResults<-function(result_list, cg_subsets, Ks, lambdas, NFOLDS, result_in
 									
 								})
 						
-						results[[elt]][K_index, ll_index]<-mean(cv.errs)							
+						results[[elt]][K_index, ll_index]<-mean(cv.errs)	
+						save_cve_filename = paste(unlist(strsplit(paste0(Sys.time(),".rds")," ")),collapse="_")
+						print(save_cve_filename)
+						saveRDS(cv.errs, paste0("~/medecom_cve/",save_cve_filename))
+						rm(save_cve_filename)
 					}else if (elts[elt]=="dist2C"){
 						res<-NULL
 							res_idx<-result_index[
