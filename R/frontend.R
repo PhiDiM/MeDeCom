@@ -873,12 +873,13 @@ collectResults<-function(result_list, cg_subsets, Ks, lambdas, NFOLDS, result_in
 	
 	#### Prepare containers
 	
-	elts<-c("T", "A", "cve", "Fval", "rmse", "rmseT", "maeA")# ,"dist2C")
+	elts<-c("T", "A", "cve", "cve_sd", "Fval", "rmse", "rmseT", "maeA")# ,"dist2C")
 	
 	elt_types<-c(
 			"T"=quote(list()), 
 			"A"=quote(list()), 
 			"cve"=quote(NA_real_), 
+			"cve_sd"=quote(NA_real_), 
 			"Fval"=quote(NA_real_), 
 			"rmse"=quote(NA_real_), 
 			"rmseT"=quote(NA_real_), 
@@ -953,6 +954,20 @@ collectResults<-function(result_list, cg_subsets, Ks, lambdas, NFOLDS, result_in
 								})
 						
 						results[[elt]][K_index, ll_index]<-mean(cv.errs)							
+					}else if(elts[elt]=="cve_sd"){
+						cv.errs<-sapply(folds, function(fold){	
+										res_idx<-result_index[
+												#match(run, c("initial", "cv")),
+												gr,
+												match(fold, c(0,folds)),
+												K_index,
+												ll_index]
+										res<-result_list[[res_idx]]
+										return(el(res, where=3))
+									
+								})
+						
+						results[[elt]][K_index, ll_index]<-sd(cv.errs)							
 					}else if (elts[elt]=="dist2C"){
 						res<-NULL
 							res_idx<-result_index[
